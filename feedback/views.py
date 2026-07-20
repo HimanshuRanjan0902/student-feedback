@@ -93,16 +93,25 @@ def redirect_after_login(request):
 # Student Dashboard
 @login_required
 def student_dashboard(request):
-    recent_feedback = Feedback.objects.filter(
+    recent_feedback = (
+        Feedback.objects.filter(student=request.user)
+        .select_related("category", "subject")
+        .order_by("-submitted_at")[:5]
+    )
+
+    total_feedback = Feedback.objects.filter(
         student=request.user
-    ).order_by("-created_at")[:5]
+    ).count()
+
+    context = {
+        "recent_feedback": recent_feedback,
+        "total_feedback": total_feedback,
+    }
 
     return render(
         request,
         "feedback/student_dashboard.html",
-        {
-            "recent_feedback": recent_feedback,
-        },
+        context,
     )
 # =====================================================
 # Submit Feedback

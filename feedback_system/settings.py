@@ -213,7 +213,9 @@ EMAIL_HOST_USER = os.environ.get("himanshuranjan2213@gmail.com")
 EMAIL_HOST_PASSWORD = os.environ.get("ryri fhcg iuob msci")
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://student-feedback-bm06.onrender.com",
+]
 
 # =====================================================
 # Production Security
