@@ -1,0 +1,97 @@
+{% extends 'feedback/base.html' %}
+{% block title %}Admin Dashboard · Student Feedback System{% endblock %}
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Admin dashboard</h1>
+        <p class="text-muted mb-0">Review and respond to student feedback.</p>
+    </div>
+    <a href="{% url 'feedback:reports' %}" class="btn btn-outline-primary">View reports</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="stat-card"><div class="stat-value">{{ stats.total }}</div><div class="stat-label">Total</div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card"><div class="stat-value">{{ stats.pending }}</div><div class="stat-label">Pending</div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card"><div class="stat-value">{{ stats.resolved }}</div><div class="stat-label">Resolved</div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card"><div class="stat-value">{{ stats.avg_rating|floatformat:1 }}</div><div class="stat-label">Avg. rating</div></div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small">Search subject</label>
+                <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small">Status</label>
+                <select name="status" class="form-select">
+                    <option value="">All statuses</option>
+                    {% for value, label in status_choices %}
+                        <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small">Category</label>
+                <select name="category" class="form-select">
+                    <option value="">All categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if entries %}
+        <div class="table-responsive">
+            <table class="table feedback-table align-middle">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Student</th>
+                        <th>Category</th>
+                        <th>Rating</th>
+                        <th>Status</th>
+                        <th>Submitted</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in entries %}
+                    <tr>
+                        <td>{{ entry.subject }}</td>
+                        <td>{{ entry.display_name }}</td>
+                        <td>{{ entry.category.name|default:"—" }}</td>
+                        <td>{{ entry.rating }}/5</td>
+                        <td><span class="badge badge-status-{{ entry.status }}">{{ entry.get_status_display }}</span></td>
+                        <td>{{ entry.submitted_at|date:"M j, Y" }}</td>
+                        <td><a href="{% url 'feedback:feedback_detail' entry.pk %}" class="btn btn-sm btn-outline-secondary">Review</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">No feedback entries match these filters.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

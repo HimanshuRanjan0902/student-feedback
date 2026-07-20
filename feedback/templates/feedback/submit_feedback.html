@@ -1,0 +1,109 @@
+{% extends 'feedback/base.html' %}
+
+{% block title %}Submit Feedback{% endblock %}
+
+{% block page_title %}
+Submit Feedback
+{% endblock %}
+
+{% block content %}
+
+<div class="fade-up">
+
+    <div class="card p-5">
+
+        <div class="mb-4">
+
+            <h2 class="fw-bold">
+                Submit Feedback
+            </h2>
+
+            <p class="text-muted">
+                Your feedback helps improve teaching quality and the learning experience.
+            </p>
+
+        </div>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <!-- Category -->
+            <div class="mb-4">
+                <label class="form-label">Category</label>
+                {{ form.category }}
+            </div>
+
+            <!-- Subject -->
+            <div class="mb-4">
+                <label class="form-label">Subject</label>
+                {{ form.subject }}
+            </div>
+
+            <!-- Ratings -->
+            <h5 class="mb-3">Ratings</h5>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Teaching</label>
+                    {{ form.teaching_rating }}
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Communication</label>
+                    {{ form.communication_rating }}
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Knowledge</label>
+                    {{ form.knowledge_rating }}
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Behaviour</label>
+                    {{ form.behaviour_rating }}
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Overall Rating</label>
+                    {{ form.overall_rating }}
+                </div>
+
+            </div>
+
+            <!-- Message -->
+            <div class="mb-4">
+                <label class="form-label">Feedback Message</label>
+                {{ form.message }}
+            </div>
+
+            <!-- Anonymous -->
+            <div class="form-check mb-4">
+                {{ form.is_anonymous }}
+                <label class="form-check-label">
+                    Submit anonymously
+                </label>
+            </div>
+
+            <div class="d-flex gap-3">
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-send-fill"></i>
+                    Submit Feedback
+                </button>
+
+                <a href="{% url 'feedback:student_dashboard' %}"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

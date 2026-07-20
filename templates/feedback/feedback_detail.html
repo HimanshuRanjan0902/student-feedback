@@ -1,0 +1,234 @@
+{% extends "feedback/base.html" %}
+{% load static %}
+
+{% block title %}Feedback Details{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row">
+
+        <!-- Left Side -->
+
+        <div class="col-lg-4">
+
+            <div class="card shadow border-0">
+
+                <img src="{% static 'feedback/img/teacher.jpg' %}"
+                     class="card-img-top"
+                     style="height:300px;object-fit:cover;">
+
+                <div class="card-body text-center">
+
+                    <h4 class="fw-bold">
+                        Feedback Details
+                    </h4>
+
+                    <p class="text-muted">
+                        Thank you for helping improve education.
+                    </p>
+
+                    {% if feedback.status == "Pending" %}
+
+                        <span class="badge bg-warning fs-6">
+                            Pending
+                        </span>
+
+                    {% elif feedback.status == "Reviewed" %}
+
+                        <span class="badge bg-info fs-6">
+                            Reviewed
+                        </span>
+
+                    {% elif feedback.status == "Resolved" %}
+
+                        <span class="badge bg-success fs-6">
+                            Resolved
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-secondary fs-6">
+                            {{ feedback.get_status_display }}
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Right Side -->
+
+        <div class="col-lg-8">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h4 class="mb-0">
+
+                        Feedback Information
+
+                    </h4>
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table">
+
+                        <tr>
+                            <th width="220">Student</th>
+                            <td>{{ feedback.student.username }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Category</th>
+                            <td>{{ feedback.category.name }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Subject</th>
+                            <td>{{ feedback.subject.name }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Teaching Rating</th>
+                            <td>{{ feedback.teaching_rating }}/5</td>
+                        </tr>
+
+                        <tr>
+                            <th>Communication Rating</th>
+                            <td>{{ feedback.communication_rating }}/5</td>
+                        </tr>
+
+                        <tr>
+                            <th>Knowledge Rating</th>
+                            <td>{{ feedback.knowledge_rating }}/5</td>
+                        </tr>
+
+                        <tr>
+                            <th>Behaviour Rating</th>
+                            <td>{{ feedback.behaviour_rating }}/5</td>
+                        </tr>
+
+                        <tr>
+                            <th>Overall Rating</th>
+                            <td>
+
+                                <span class="badge bg-success fs-6">
+
+                                    {{ feedback.overall_rating }}/5
+
+                                </span>
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Message</th>
+                            <td>{{ feedback.message }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Submitted On</th>
+                            <td>{{ feedback.submitted_at }}</td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- Admin Response -->
+
+            {% if form %}
+
+            <div class="card shadow border-0 mt-4">
+
+                <div class="card-header bg-success text-white">
+
+                    <h5 class="mb-0">
+
+                        Admin Response
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <form method="post">
+
+                        {% csrf_token %}
+
+                        {{ form.as_p }}
+
+                        <button class="btn btn-success">
+
+                            Save Response
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            {% elif feedback.admin_response %}
+
+            <div class="card shadow border-0 mt-4">
+
+                <div class="card-header bg-success text-white">
+
+                    Admin Response
+
+                </div>
+
+                <div class="card-body">
+
+                    {{ feedback.admin_response }}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+            <div class="mt-4">
+
+                {% if request.user.is_staff %}
+
+                    <a href="{% url 'feedback:admin_dashboard' %}"
+                       class="btn btn-secondary">
+
+                        Back to Dashboard
+
+                    </a>
+
+                {% else %}
+
+                    <a href="{% url 'feedback:feedback_history' %}"
+                       class="btn btn-secondary">
+
+                        Back to History
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

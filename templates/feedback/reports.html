@@ -1,0 +1,252 @@
+{% extends "feedback/base.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- Header -->
+
+    <div class="text-center mb-5">
+
+        <h2 class="fw-bold text-primary">
+            Feedback Reports
+        </h2>
+
+        <p class="text-muted">
+            Overall analytics of student feedback.
+        </p>
+
+    </div>
+
+    <!-- Summary Cards -->
+
+    <div class="row g-4 mb-5">
+
+        <div class="col-md-6">
+
+            <div class="card shadow border-0 text-center">
+
+                <div class="card-body">
+
+                    <h1 class="display-5 text-primary">
+
+                        {{ total_feedback }}
+
+                    </h1>
+
+                    <h5>Total Feedback</h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card shadow border-0 text-center">
+
+                <div class="card-body">
+
+                    <h1 class="display-5 text-success">
+
+                        {{ average_rating|floatformat:1 }}
+
+                    </h1>
+
+                    <h5>Average Rating</h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Charts -->
+
+    <div class="row">
+
+        <div class="col-lg-6 mb-4">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-primary text-white">
+
+                    Category Wise Feedback
+
+                </div>
+
+                <div class="card-body">
+
+                    <canvas id="categoryChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6 mb-4">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-success text-white">
+
+                    Status Distribution
+
+                </div>
+
+                <div class="card-body">
+
+                    <canvas id="statusChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Category Table -->
+
+    <div class="card shadow border-0 mt-4">
+
+        <div class="card-header bg-dark text-white">
+
+            Feedback By Category
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover mb-0">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Category</th>
+                        <th>Total</th>
+                        <th>Average Rating</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for item in by_category %}
+
+                    <tr>
+
+                        <td>{{ item.category__name }}</td>
+
+                        <td>{{ item.total }}</td>
+
+                        <td>{{ item.average|floatformat:1 }}</td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- Subject Table -->
+
+    <div class="card shadow border-0 mt-4">
+
+        <div class="card-header bg-secondary text-white">
+
+            Feedback By Subject
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover mb-0">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Subject</th>
+                        <th>Total</th>
+                        <th>Average Rating</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for item in by_subject %}
+
+                    <tr>
+
+                        <td>{{ item.subject__name }}</td>
+
+                        <td>{{ item.total }}</td>
+
+                        <td>{{ item.average|floatformat:1 }}</td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const data = JSON.parse('{{ chart_data|escapejs }}');
+
+new Chart(document.getElementById("categoryChart"),{
+
+type:"bar",
+
+data:{
+labels:data.category_labels,
+datasets:[{
+label:"Feedback",
+data:data.category_counts
+}]
+}
+
+});
+
+new Chart(document.getElementById("statusChart"),{
+
+type:"doughnut",
+
+data:{
+labels:data.status_labels,
+datasets:[{
+data:data.status_counts
+}]
+}
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+.table th{
+    font-weight:600;
+    color:#475569;
+}
+
+.table td{
+    vertical-align:middle;
+}
+
+.table tbody tr{
+    transition:.25s;
+}
+
+.table tbody tr:hover{
+    background:#f8fbff;
+}
+
+.badge{
+    padding:8px 14px;
+    border-radius:30px;
+    font-size:.85rem;
+}
+
+.btn-outline-primary{
+    border-radius:10px;
+}

@@ -1,0 +1,101 @@
+{% extends 'feedback/base.html' %}
+{% block title %}Reports · Student Feedback System{% endblock %}
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Feedback reports</h1>
+        <p class="text-muted mb-0">Aggregate trends across all submitted feedback.</p>
+    </div>
+    <a href="{% url 'feedback:admin_dashboard' %}" class="btn btn-outline-secondary">Back to dashboard</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="stat-card"><div class="stat-value">{{ total_feedback }}</div><div class="stat-label">Total feedback</div></div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card"><div class="stat-value">{{ avg_rating|floatformat:2 }}</div><div class="stat-label">Average rating</div></div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h6 mb-3">Submissions by category</h2>
+                <canvas id="categoryChart" height="220"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h6 mb-3">Average rating by category</h2>
+                <canvas id="categoryRatingChart" height="220"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h6 mb-3">Status breakdown</h2>
+                <canvas id="statusChart" height="220"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h6 mb-3">Rating distribution</h2>
+                <canvas id="ratingChart" height="220"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+    const chartData = {{ chart_data|safe }};
+    const palette = ['#3d6df2', '#2fb380', '#f5a623', '#e0574c', '#8e6ff5', '#1f2a44'];
+
+    new Chart(document.getElementById('categoryChart'), {
+        type: 'bar',
+        data: {
+            labels: chartData.categoryLabels,
+            datasets: [{ label: 'Submissions', data: chartData.categoryCounts, backgroundColor: palette[0] }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+
+    new Chart(document.getElementById('categoryRatingChart'), {
+        type: 'bar',
+        data: {
+            labels: chartData.categoryLabels,
+            datasets: [{ label: 'Avg. rating', data: chartData.categoryAvgRatings, backgroundColor: palette[1] }]
+        },
+        options: { responsive: true, scales: { y: { min: 0, max: 5 } }, plugins: { legend: { display: false } } }
+    });
+
+    new Chart(document.getElementById('statusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: chartData.statusLabels,
+            datasets: [{ data: chartData.statusCounts, backgroundColor: palette }]
+        },
+        options: { responsive: true }
+    });
+
+    new Chart(document.getElementById('ratingChart'), {
+        type: 'bar',
+        data: {
+            labels: chartData.ratingLabels,
+            datasets: [{ label: 'Number of ratings', data: chartData.ratingCounts, backgroundColor: palette[2] }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+</script>
+{% endblock %}

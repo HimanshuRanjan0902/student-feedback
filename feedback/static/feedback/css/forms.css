@@ -1,0 +1,71 @@
+.card form label{
+    font-weight:600;
+    margin-bottom:8px;
+}
+
+.card form textarea{
+    min-height:140px;
+    resize:vertical;
+}
+
+.card form input,
+.card form select,
+.card form textarea{
+
+    border-radius:12px;
+
+    border:1px solid #dbe4f5;
+
+    padding:12px;
+
+}
+
+.card form input:focus,
+.card form select:focus,
+.card form textarea:focus{
+
+    border-color:#2563EB;
+
+    box-shadow:0 0 0 .2rem rgba(37,99,235,.18);
+
+}
+.card form label{
+    font-weight:600;
+    color:#1e293b;
+}
+
+.card form .form-control,
+.card form .form-select{
+
+    height:50px;
+
+    border-radius:12px;
+
+    border:1px solid #dce6f7;
+
+    transition:.3s;
+
+}
+
+.card form textarea{
+
+    min-height:150px;
+
+}
+
+.card form .form-control:focus,
+.card form .form-select:focus{
+
+    border-color:#2563EB;
+
+    box-shadow:0 0 0 .2rem rgba(37,99,235,.2);
+
+}
+
+.card{
+
+    border:none;
+
+    border-radius:20px;
+
+}

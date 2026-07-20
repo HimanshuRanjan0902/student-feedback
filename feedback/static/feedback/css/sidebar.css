@@ -1,0 +1,162 @@
+/* =====================================
+   SIDEBAR
+===================================== */
+
+.sidebar{
+
+    position:fixed;
+
+    left:0;
+    top:0;
+
+    width:260px;
+
+    height:100vh;
+
+    background:linear-gradient(
+        180deg,
+        #0F172A,
+        #1E293B);
+
+    color:white;
+
+    padding:25px 20px;
+
+    transition:.35s;
+
+    z-index:1000;
+
+    overflow-y:auto;
+
+    box-shadow:
+        10px 0 40px rgba(0,0,0,.15);
+
+}
+
+
+/* LOGO */
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:12px;
+
+    margin-bottom:50px;
+
+    font-size:26px;
+
+    font-weight:700;
+
+    color:white;
+
+}
+
+.logo i{
+
+    font-size:34px;
+
+    color:#3B82F6;
+
+}
+
+
+/* MENU */
+
+.sidebar ul{
+
+    list-style:none;
+
+    padding:0;
+
+}
+
+.sidebar li{
+
+    margin-bottom:12px;
+
+}
+
+.sidebar a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    text-decoration:none;
+
+    color:#CBD5E1;
+
+    padding:14px 18px;
+
+    border-radius:15px;
+
+    transition:.35s;
+
+    font-size:15px;
+
+    font-weight:500;
+
+}
+
+.sidebar a i{
+
+    font-size:20px;
+
+}
+
+
+/* HOVER */
+
+.sidebar a:hover{
+
+    background:linear-gradient(
+        45deg,
+        #2563EB,
+        #3B82F6);
+
+    color:white;
+
+    transform:translateX(8px);
+
+    box-shadow:
+        0 10px 25px rgba(37,99,235,.35);
+
+}
+
+
+/* ACTIVE */
+
+.sidebar a.active{
+
+    background:linear-gradient(
+        45deg,
+        #2563EB,
+        #3B82F6);
+
+    color:white;
+
+}
+
+
+/* SCROLLBAR */
+
+.sidebar::-webkit-scrollbar{
+
+    width:6px;
+
+}
+
+.sidebar::-webkit-scrollbar-thumb{
+
+    background:#2563EB;
+
+    border-radius:20px;
+
+}

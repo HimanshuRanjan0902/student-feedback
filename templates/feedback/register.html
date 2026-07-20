@@ -1,0 +1,101 @@
+{% extends "feedback/base.html" %}
+{% load static %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row shadow-lg rounded-4 overflow-hidden bg-white">
+
+        <!-- Left Side Image -->
+        <div class="col-lg-6 d-none d-lg-block p-0">
+
+            <img src="{% static 'feedback/img/education.jpg' %}"
+                 class="img-fluid h-100 w-100"
+                 style="object-fit:cover;">
+
+        </div>
+
+        <!-- Right Side Form -->
+        <div class="col-lg-6 p-5">
+
+            <div class="text-center mb-4">
+
+                <img src="{% static 'feedback/img/logo.jpg' %}"
+                     width="80"
+                     class="rounded-circle shadow mb-3">
+
+                <h2 class="fw-bold text-primary">
+                    Create Account
+                </h2>
+
+                <p class="text-muted">
+                    Register to access the Student Feedback System
+                </p>
+
+            </div>
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                {% for field in form %}
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        {{ field.label }}
+
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.errors %}
+
+                        <div class="text-danger small">
+
+                            {{ field.errors }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                {% endfor %}
+
+                <button type="submit"
+                        class="btn btn-success w-100 py-2">
+
+                    <i class="bi bi-person-plus-fill"></i>
+
+                    Register
+
+                </button>
+
+            </form>
+
+            <hr>
+
+            <p class="text-center">
+
+                Already have an account?
+
+                <a href="{% url 'feedback:login' %}">
+
+                    Login Here
+
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

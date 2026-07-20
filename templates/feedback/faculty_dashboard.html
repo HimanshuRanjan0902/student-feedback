@@ -1,0 +1,178 @@
+{% extends "feedback/base.html" %}
+{% load static %}
+
+{% block title %}Faculty Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- Header -->
+
+    <div class="row align-items-center mb-5">
+
+        <div class="col-md-8">
+
+            <h2 class="fw-bold text-primary">
+
+                Faculty Dashboard
+
+            </h2>
+
+            <p class="text-muted">
+
+                Manage faculty members and their assigned subjects.
+
+            </p>
+
+        </div>
+
+        <div class="col-md-4 text-end">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body">
+
+                    <h1 class="text-success">
+
+                        {{ total_faculty }}
+
+                    </h1>
+
+                    <h6>Total Faculty</h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Faculty Cards -->
+
+    <div class="row">
+
+        {% for faculty in faculty_list %}
+
+        <div class="col-lg-4 col-md-6 mb-4">
+
+            <div class="card shadow border-0 h-100">
+
+                <img src="{% static 'feedback/img/teacher.jpg' %}"
+                     class="card-img-top"
+                     style="height:220px;object-fit:cover;">
+
+                <div class="card-body">
+
+                    <h4 class="fw-bold">
+
+                        {{ faculty.name }}
+
+                    </h4>
+
+                    <hr>
+
+                    <p>
+
+                        <strong>Department:</strong>
+
+                        <span class="badge bg-primary">
+
+                            {{ faculty.department.name }}
+
+                        </span>
+
+                    </p>
+
+                    {% if faculty.email %}
+
+                    <p>
+
+                        <strong>Email:</strong><br>
+
+                        {{ faculty.email }}
+
+                    </p>
+
+                    {% endif %}
+
+                    {% if faculty.phone %}
+
+                    <p>
+
+                        <strong>Phone:</strong>
+
+                        {{ faculty.phone }}
+
+                    </p>
+
+                    {% endif %}
+
+                    <p>
+
+                        <strong>Subjects:</strong>
+
+                    </p>
+
+                    {% for subject in faculty.subjects.all %}
+
+                        <span class="badge bg-success me-1 mb-1">
+
+                            {{ subject.name }}
+
+                        </span>
+
+                    {% empty %}
+
+                        <span class="text-muted">
+
+                            No Subjects Assigned
+
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+
+            <div class="card shadow">
+
+                <div class="card-body text-center py-5">
+
+                    <img src="{% static 'feedback/img/teacher.jpg' %}"
+                         width="220"
+                         class="mb-3 rounded">
+
+                    <h3>
+
+                        No Faculty Found
+
+                    </h3>
+
+                    <p class="text-muted">
+
+                        Faculty records are currently unavailable.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

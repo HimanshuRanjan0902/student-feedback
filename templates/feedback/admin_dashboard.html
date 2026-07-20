@@ -1,0 +1,460 @@
+{% extends "feedback/base.html" %}
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold text-primary">
+                Admin Dashboard
+            </h2>
+
+            <p class="text-muted">
+                Monitor and manage student feedback.
+            </p>
+
+        </div>
+
+        <div>
+
+            <a href="{% url 'feedback:export_csv' %}"
+               class="btn btn-success">
+
+                CSV
+
+            </a>
+
+            <a href="{% url 'feedback:export_excel' %}"
+               class="btn btn-warning">
+
+                Excel
+
+            </a>
+
+            <a href="{% url 'feedback:export_pdf' %}"
+               class="btn btn-danger">
+
+                PDF
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Statistics -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-3">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <h1 class="text-primary">
+                        {{ stats.total }}
+                    </h1>
+
+                    <h5>Total Feedback</h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <h1 class="text-warning">
+                        {{ stats.pending }}
+                    </h1>
+
+                    <h5>Pending</h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <h1 class="text-info">
+                        {{ stats.reviewed }}
+                    </h1>
+
+                    <h5>Reviewed</h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <h1 class="text-success">
+                        {{ stats.resolved }}
+                    </h1>
+
+                    <h5>Resolved</h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Filters -->
+
+    <div class="card shadow border-0 mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="q"
+                            placeholder="Search Subject..."
+                            value="{{ search }}">
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <select
+                            class="form-select"
+                            name="category">
+
+                            <option value="">All Categories</option>
+
+                            {% for cat in categories %}
+
+                            <option
+                                value="{{ cat.id }}"
+                                {% if selected_category == cat.id|stringformat:"s" %}
+                                selected
+                                {% endif %}>
+
+                                {{ cat.name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <select
+                            class="form-select"
+                            name="status">
+
+                            <option value="">All Status</option>
+
+                            {% for value,label in status_choices %}
+
+                            <option
+                                value="{{ value }}"
+                                {% if selected_status == value %}
+                                selected
+                                {% endif %}>
+
+                                {{ label }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <button
+                            class="btn btn-primary w-100">
+
+                            Search
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Charts -->
+
+    <div class="row mb-4">
+
+        <div class="col-lg-6">
+
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    Monthly Feedback
+
+                </div>
+
+                <div class="card-body">
+
+                    <canvas id="monthlyChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    Rating Distribution
+
+                </div>
+
+                <div class="card-body">
+
+                    <canvas id="ratingChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Feedback Table -->
+
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-primary text-white">
+
+            Recent Feedback
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover mb-0">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Student</th>
+                        <th>Category</th>
+                        <th>Subject</th>
+                        <th>Rating</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th></th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for fb in feedbacks %}
+
+                    <tr>
+
+                        <td>{{ fb.student.username }}</td>
+
+                        <td>{{ fb.category.name }}</td>
+
+                        <td>{{ fb.subject.name }}</td>
+
+                        <td>{{ fb.overall_rating }}/5</td>
+
+                        <td>
+
+                            <span class="badge bg-secondary">
+
+                                {{ fb.get_status_display }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            {{ fb.submitted_at|date:"d M Y" }}
+
+                        </td>
+
+                        <td>
+
+                            <a href="{% url 'feedback:feedback_detail' fb.pk %}"
+                               class="btn btn-sm btn-outline-primary">
+
+                                View
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="7" class="text-center">
+
+                            No feedback available.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- Pagination -->
+
+    <nav class="mt-4">
+
+        <ul class="pagination justify-content-center">
+
+            {% if feedbacks.has_previous %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ feedbacks.previous_page_number }}">
+
+                    Previous
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+            <li class="page-item active">
+
+                <span class="page-link">
+
+                    {{ feedbacks.number }}
+
+                </span>
+
+            </li>
+
+            {% if feedbacks.has_next %}
+
+            <li class="page-item">
+
+                <a class="page-link"
+                   href="?page={{ feedbacks.next_page_number }}">
+
+                    Next
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+        </ul>
+
+    </nav>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+new Chart(document.getElementById("monthlyChart"),{
+
+type:"bar",
+
+data:{
+
+labels:{{ months|safe }},
+
+datasets:[{
+
+label:"Feedback",
+
+data:{{ monthly_counts|safe }}
+
+}]
+
+}
+
+});
+
+new Chart(document.getElementById("ratingChart"),{
+
+type:"pie",
+
+data:{
+
+labels:["1★","2★","3★","4★","5★"],
+
+datasets:[{
+
+data:{{ rating_counts|safe }}
+
+}]
+
+}
+
+});
+
+</script>
+
+{% endblock %}

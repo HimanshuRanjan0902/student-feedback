@@ -1,0 +1,16 @@
+.form-label{
+    font-weight:600;
+    color:#1e293b;
+}
+
+.card{
+    animation:fadeUp .6s ease;
+}
+
+.btn-lg{
+    padding:12px 20px;
+}
+
+.alert{
+    border-radius:12px;
+}
